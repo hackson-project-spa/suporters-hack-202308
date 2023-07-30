@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Flex, Center, Text, HStack, Link } from "@chakra-ui/react";
+import { Link as LinkRouter } from "react-router-dom";
 
 class HomeMain extends React.Component {
   render() {
@@ -19,13 +20,13 @@ class HomeMain extends React.Component {
           <Center>
             <Flex>
               <HStack spacing={"50px"}>
-                <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
+                <LinkRouter to="/tag">
                   <Box bg={"teal"} p={10} rounded="base">
                     <Text fontSize="xl" color={"white"}>
                       ボタン
                     </Text>
                   </Box>
-                </Link>
+                </LinkRouter>
                 <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
                   <Box bg={"teal"} p={10} rounded="base">
                     <Text fontSize="xl" color={"white"}>
