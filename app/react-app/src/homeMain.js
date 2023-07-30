@@ -1,9 +1,56 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex, Center, Text, HStack, Link } from "@chakra-ui/react";
 
 class HomeMain extends React.Component {
   render() {
-    return <Box></Box>;
+    return (
+      <Box>
+        <Box p={20} bg={"##ff0000"}>
+          <Center>
+            <Text fontSize="xl">タイトルロゴ</Text>
+          </Center>
+        </Box>
+        <Box p={20}>
+          <Center>
+            <Text fontSize="xl">概要</Text>
+          </Center>
+        </Box>
+        <Box p={20}>
+          <Center>
+            <Flex>
+              <HStack spacing={"50px"}>
+                <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
+                  <Box bg={"teal"} p={10} rounded="base">
+                    <Text fontSize="xl" color={"white"}>
+                      ボタン
+                    </Text>
+                  </Box>
+                </Link>
+                <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
+                  <Box bg={"teal"} p={10} rounded="base">
+                    <Text fontSize="xl" color={"white"}>
+                      ボタン
+                    </Text>
+                  </Box>
+                </Link>
+
+                <Box
+                  as="a"
+                  bg={"teal"}
+                  p={10}
+                  rounded="base"
+                  href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js"
+                >
+                  <Text fontSize="xl" color={"white"}>
+                    ボタン
+                  </Text>
+                </Box>
+              </HStack>
+            </Flex>
+          </Center>
+        </Box>
+      </Box>
+    );
   }
 }
 
