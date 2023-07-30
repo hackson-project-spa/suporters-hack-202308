@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import Heder from "./Header";
+import Home from "./Home";
 // import Page from './Page';
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     /* この部分はコメントです */
 
     <Box>
-      <Heder />
+      <Home />
       {/* <Page /> */}
     </Box>
   );

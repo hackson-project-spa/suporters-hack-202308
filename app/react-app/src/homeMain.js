@@ -1,54 +1,57 @@
-import React from 'react';
-import Lesson from './Lesson';
+import React from "react";
+import { Box, Flex, Center, Text, HStack, Link } from "@chakra-ui/react";
 
-class Main extends React.Component {
+class HomeMain extends React.Component {
   render() {
-    const lessonList = [
-      {
-        name: '明義 & HTML & CSS',
-        image: 'https://s3-ap-northeast-1.amazonaws.com/progate/shared/images/lesson/react/html.svg',
-        introduction: 'WEBページはHTML、CSSという言語によってその見た目が作られています。 実際にWEBページを作りながら学んでみましょう！',
-      },
-      {
-        name: '明義のSass',
-        image: 'https://s3-ap-northeast-1.amazonaws.com/progate/shared/images/lesson/react/sass.svg',
-        introduction: 'SassはCSSをより便利に効率的にするための言語です。',
-      },
-      {
-        name: '明義のJavaScript',
-        image: 'https://s3-ap-northeast-1.amazonaws.com/progate/shared/images/lesson/react/es6.svg',
-        introduction: 'JavaScriptはフロントエンドだけでなく、サーバーサイドまで広い可能性を持つプログラミング言語です。',
-      },
-      {
-        name: '明義のReact',
-        image: 'https://s3-ap-northeast-1.amazonaws.com/progate/shared/images/lesson/react/react.svg',
-        introduction: 'ReactはHTMLのように、サイトの見た目をつくることができるJavaScriptのライブラリです。',
-      },
-    ];
-
     return (
-      <div className='main-wrapper'>
-        <div className='main'>
-          <div className='copy-container'>
-            <h1>Hello, World.</h1>
-            <h2>プログラミングの世界へようこそ！</h2>
-          </div>
-          <div className='lesson-container'>
-            <h3>学べるレッスン</h3>
-            {lessonList.map((lessonItem) => {
-              return (
-                <Lesson
-                  name={lessonItem.name}
-                  image={lessonItem.image}
-                  introduction={lessonItem.introduction}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <Box>
+        <Box p={20} bg={"##ff0000"}>
+          <Center>
+            <Text fontSize="xl">タイトルロゴ</Text>
+          </Center>
+        </Box>
+        <Box p={20}>
+          <Center>
+            <Text fontSize="xl">概要</Text>
+          </Center>
+        </Box>
+        <Box p={20}>
+          <Center>
+            <Flex>
+              <HStack spacing={"50px"}>
+                <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
+                  <Box bg={"teal"} p={10} rounded="base">
+                    <Text fontSize="xl" color={"white"}>
+                      ボタン
+                    </Text>
+                  </Box>
+                </Link>
+                <Link href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js">
+                  <Box bg={"teal"} p={10} rounded="base">
+                    <Text fontSize="xl" color={"white"}>
+                      ボタン
+                    </Text>
+                  </Box>
+                </Link>
+
+                <Box
+                  as="a"
+                  bg={"teal"}
+                  p={10}
+                  rounded="base"
+                  href="https://github.com/hackson-project-spa/proctice-hack-2/blob/devel/app/react-app/src/App.js"
+                >
+                  <Text fontSize="xl" color={"white"}>
+                    ボタン
+                  </Text>
+                </Box>
+              </HStack>
+            </Flex>
+          </Center>
+        </Box>
+      </Box>
     );
   }
 }
 
-export default Main;
+export default HomeMain;
