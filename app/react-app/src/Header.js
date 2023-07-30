@@ -1,6 +1,5 @@
 import React from "react";
 import { Tab, Tabs, TabList, Text, HStack, Link } from "@chakra-ui/react";
-import img from "./Date.png";
 
 class Heder extends React.Component {
   render() {
