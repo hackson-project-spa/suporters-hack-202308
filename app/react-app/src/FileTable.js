@@ -1,17 +1,16 @@
-import TabMain from "./TabMain";
+import React from "react";
 import Header from "./Header";
 import { Box } from "@chakra-ui/react";
-import React from "react";
 
-class Tab extends React.Component {
+class FileTable extends React.Component {
   render() {
     return (
       <Box>
         <Header />
-        <TabMain />
+        {/* <></> */}
       </Box>
     );
   }
 }
 
-export default Tab;
+export default FileTable;

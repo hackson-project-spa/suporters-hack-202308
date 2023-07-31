@@ -1,14 +1,19 @@
 import { Box } from "@chakra-ui/react";
-import Heder from "./Header";
-// import Page from './Page';
+import { Routes, Route, Link } from "react-router-dom";
+import Home from "./Home";
+import Tab from "./Tab";
+import FileRegister from "./FileRegister";
+import FileTable from "./FileTable";
 
 function App() {
   return (
-    /* この部分はコメントです */
-
     <Box>
-      <Heder />
-      {/* <Page /> */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/tag" element={<Tab />} />
+        <Route path="/index" element={<FileTable />} />
+        <Route path="/register" element={<FileRegister />} />
+      </Routes>
     </Box>
   );
 }

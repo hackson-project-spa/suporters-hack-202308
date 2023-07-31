@@ -1,17 +1,17 @@
-import TabMain from "./TabMain";
-import Header from "./Header";
-import { Box } from "@chakra-ui/react";
 import React from "react";
+import Header from "./Header";
+import HomeMain from "./HomeMain";
+import { Box } from "@chakra-ui/react";
 
-class Tab extends React.Component {
+class Home extends React.Component {
   render() {
     return (
       <Box>
         <Header />
-        <TabMain />
+        <HomeMain />
       </Box>
     );
   }
 }
 
-export default Tab;
+export default Home;
