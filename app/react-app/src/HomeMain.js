@@ -23,7 +23,7 @@ class HomeMain extends React.Component {
                 <LinkRouter to="/tag">
                   <Box bg={"teal"} p={10} rounded="base">
                     <Text fontSize="xl" color={"white"}>
-                      ボタン
+                      タグ登録
                     </Text>
                   </Box>
                 </LinkRouter>
