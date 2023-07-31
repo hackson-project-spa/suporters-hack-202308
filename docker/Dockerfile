@@ -4,8 +4,8 @@ FROM node:lts
 WORKDIR /usr/src/app
 
 # firebaseのインストール
-# RUN npm install firebase
-# RUN npm install -g firebase-tools
+RUN npm install firebase
+RUN npm install -g firebase-tools
 
 # # react-router-domのインストール
 # RUN npm i -S react-router-dom 
