@@ -18,10 +18,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import FocusLock from "react-focus-lock";
+import db from "./firebase";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 class TabMain extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    const posts = [
+    const tabs = [
       {
         id: 3,
         title: "title3",
@@ -146,6 +153,20 @@ class TabMain extends React.Component {
       );
     };
 
+    // const [posts, setPosts] = useState([]);
+    // useEffect(() => {
+    //   const firebaseData = collection(db, "pops");
+    //   getDocs(firebaseData).then((snapshot) => {
+    //     setPosts(snapshot.docs.map((doc) => ({ ...doc.data() })));
+    //     // console.log(snapshot.docs.map((doc) => ({ ...doc.data() })));
+    //   });
+
+    //   onSnapshot(firebaseData, (snapshot) => {
+    //     setPosts(snapshot.docs.map((doc) => ({ ...doc.data() })));
+    //     // console.log(snapshot.docs.map((doc) => ({ ...doc.data() })));
+    //   });
+    // }, []);
+
     return (
       <VStack>
         <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
@@ -161,13 +182,13 @@ class TabMain extends React.Component {
             </HStack>
           </Box>
           <Box overflowY="auto" maxH="50vw" w="50vw">
-            {posts.map((post) => (
-              <Stack key={post.id} spacing={4} p={4} shadow="md" borderWidth="1px" w="47vw" mb={3}>
+            {tabs.map((tab) => (
+              <Stack key={tab.id} spacing={4} p={4} shadow="md" borderWidth="1px" w="47vw" mb={3}>
                 <HStack>
                   <Text w="38vw" fontSize="sm">
-                    {post.title}
+                    {tab.title}
                   </Text>
-                  <PopoverForm tagId={post.id} tagName={post.title} />
+                  <PopoverForm tagId={tab.id} tagName={tab.title} />
                   <Button size="sm">削除</Button>
                 </HStack>
               </Stack>
