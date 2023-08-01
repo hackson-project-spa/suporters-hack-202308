@@ -7,7 +7,7 @@ class FileTable extends React.Component {
   render() {
     return (
       <Box>
-        <Header />
+        <Header index={0} />
         <FileTableList />
       </Box>
     );
