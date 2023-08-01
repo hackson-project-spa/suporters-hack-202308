@@ -31,7 +31,7 @@ class Heder extends React.Component {
               </Text>
             </LinkRouter>
             {tabList.map((tab) => (
-              <LinkRouter to={tab.path}>
+              <LinkRouter to={tab.path} key={tab.id}>
                 <Tab p={"4"}>{tab.name}</Tab>
               </LinkRouter>
             ))}

@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import FileTableList from "./FileTableList";
 import { Box } from "@chakra-ui/react";
 
 class FileTable extends React.Component {
@@ -7,7 +8,7 @@ class FileTable extends React.Component {
     return (
       <Box>
         <Header />
-        {/* <></> */}
+        <FileTableList />
       </Box>
     );
   }
