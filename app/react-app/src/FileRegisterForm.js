@@ -1,6 +1,17 @@
 import React from "react";
 import { Box, Button, Center, HStack, Textarea, VStack, Text } from "@chakra-ui/react";
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Popover,
+  PopoverTrigger,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverContent,
+} from "@chakra-ui/react";
 import { Link as LinkRouter } from "react-router-dom";
 import DefineTags from "./DefineTags";
 
@@ -28,9 +39,18 @@ function FileRegisterForm() {
             <Box bg={"#E2E8F0"} p={4} rounded="base">
               <Text fontSize="lg">tab_name</Text>
             </Box>
-            <Button size="lg" mb={4}>
-              選択
-            </Button>
+            <Popover placement="top">
+              <PopoverTrigger>
+                <Button size="lg" mb={4}>
+                  選択
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverBody>
+                  <DefineTags />
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </HStack>
         </FormControl>
         <Center p={4}>
@@ -49,7 +69,6 @@ function FileRegisterForm() {
           </HStack>
         </Center>
       </Box>
-      <DefineTags />
     </VStack>
   );
 }

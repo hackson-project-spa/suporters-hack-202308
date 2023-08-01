@@ -8,10 +8,17 @@ function DefineTags() {
     { id: 1, name: "tag1" },
     { id: 2, name: "tag2" },
     { id: 3, name: "tag3" },
+    { id: 4, name: "tag4" },
+    { id: 5, name: "tag5" },
+    { id: 5, name: "tag5" },
+    { id: 5, name: "tag5" },
+    { id: 5, name: "tag5" },
+    { id: 5, name: "tag5" },
   ];
   return (
-    <VStack>
-      <Box border="1px solid #00ffff" p={4} mt={4}>
+    <Box>
+      <VStack>
+        {/* <Box border="1px solid #00ffff" p={4} mt={4}> */}
         <FormControl>
           <FormLabel mt={1} htmlFor="name">
             ファイル名
@@ -23,17 +30,17 @@ function DefineTags() {
             </Button>
           </HStack>
         </FormControl>
-        <Box overflowY="auto" maxH="10vw" w="50vw" border="1px solid #00ffff" p={4} mt={4}>
-          <CheckboxGroup>
-            {tags.map((tag) => (
-              <Box>
-                <Checkbox>{tag.name}</Checkbox>
-              </Box>
-            ))}
-          </CheckboxGroup>
-        </Box>
+      </VStack>
+      <Box overflowY="auto" maxH="10vw">
+        <CheckboxGroup>
+          {tags.map((tag) => (
+            <Box>
+              <Checkbox>{tag.name}</Checkbox>
+            </Box>
+          ))}
+        </CheckboxGroup>
       </Box>
-    </VStack>
+    </Box>
   );
 }
 export default DefineTags;
