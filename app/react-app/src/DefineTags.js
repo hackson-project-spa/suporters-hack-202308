@@ -21,7 +21,7 @@ function DefineTags() {
         {/* <Box border="1px solid #00ffff" p={4} mt={4}> */}
         <FormControl>
           <FormLabel mt={1} htmlFor="name">
-            ファイル名
+            タグ名
           </FormLabel>
           <HStack>
             <Input id="name" w="500px" placeholder="Basic usage" size="lg" mb={4} />

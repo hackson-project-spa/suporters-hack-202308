@@ -46,6 +46,9 @@ function FileRegisterForm() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>タグを選択</PopoverHeader>
                 <PopoverBody>
                   <DefineTags />
                 </PopoverBody>
