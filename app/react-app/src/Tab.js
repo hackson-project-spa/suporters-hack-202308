@@ -7,7 +7,7 @@ class Tab extends React.Component {
   render() {
     return (
       <Box>
-        <Header />
+        <Header index={2} />
         <TabMain />
       </Box>
     );

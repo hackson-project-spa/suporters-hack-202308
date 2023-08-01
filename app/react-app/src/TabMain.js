@@ -84,9 +84,9 @@ function TabMain() {
             </Button>
           </HStack>
         </Box>
-        <Box overflowY="auto" maxH="50vw" w="50vw">
+        <Box overflowY="auto" maxH="32vw" w="50vw">
           {tabs.map((tab) => (
-            <Stack key={tab.key} spacing={4} p={4} shadow="md" borderWidth="1px" w="47vw" mb={3}>
+            <Stack key={tab.key} spacing={2} p={3} shadow="sm" borderWidth="1px" w="47vw" mb={2}>
               <HStack>
                 <Text w="38vw" fontSize="sm">
                   {tab.name}

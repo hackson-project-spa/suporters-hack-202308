@@ -7,7 +7,7 @@ class FileRegister extends React.Component {
   render() {
     return (
       <Box>
-        <Header />
+        <Header index={1} />
         <FileRegisterForm />
         {/* <></> */}
       </Box>
