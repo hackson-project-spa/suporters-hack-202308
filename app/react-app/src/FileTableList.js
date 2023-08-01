@@ -14,6 +14,9 @@ import {
   Td,
   FormLabel,
   Input,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
 
 const FileList = [
@@ -37,6 +40,21 @@ const FileList = [
     dir: "/tag",
     abs: "テスト3なんだけど、失敗した",
     tagIds: [2, 3],
+  },
+];
+
+const TagList = [
+  {
+    id: 1,
+    name: "あああああaaaaああああ",
+  },
+  {
+    id: 2,
+    name: "タグ2",
+  },
+  {
+    id: 3,
+    name: "タグssss3",
   },
 ];
 
@@ -73,7 +91,16 @@ function FileTableList() {
                 <Td>{file.name}</Td>
                 <Td>{file.dir}</Td>
                 <Td>{file.abs}</Td>
-                <Td>{file.tagIds}</Td>
+                <Td>
+                  <HStack>
+                    {file.tagIds.map((tagId) => (
+                      <Tag key={tagId} size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                        <TagLabel>{TagList.find((tag) => tag.id === tagId).name}</TagLabel>
+                        <TagCloseButton />
+                      </Tag>
+                    ))}
+                  </HStack>
+                </Td>
               </Tr>
             ))}
           </Tbody>
