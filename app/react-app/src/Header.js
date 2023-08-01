@@ -21,7 +21,7 @@ function Header(index) {
     },
   ];
   return (
-    <Tabs colorScheme="red" index={index.index} defaultIndex={-1}>
+    <Tabs colorScheme="red" index={index.index} defaultIndex={-1} backgroundColor={"#edf6fa"}>
       <TabList>
         <HStack>
           <LinkRouter to="/">
