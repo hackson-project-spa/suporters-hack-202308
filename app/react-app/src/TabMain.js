@@ -31,12 +31,10 @@ function TabMain() {
   useEffect(() => {
     getDocs(firebaseData).then((snapshot) => {
       setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
-      console.log("inputSearchTag A", inputSearchTag);
     });
 
     onSnapshot(firebaseData, (snapshot) => {
       setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
-      console.log("inputSearchTag S", inputSearchTag);
     });
   }, []);
 
@@ -159,7 +157,7 @@ const Form = ({ firstFieldRef, onCancel, tagId, tagName }) => {
           colorScheme="teal"
           type="submit"
           onClick={() => {
-            if (tagName == editTag) {
+            if (tagName === editTag) {
               return;
             }
             updateData({ tagId: tagId, name: editTag });
@@ -210,7 +208,7 @@ const PopoverForm = ({ tagId, tagName }) => {
 // 問題なく追加できれば true を返し、エラーが発生した場合は false を返す
 const addData = ({ name }) => {
   try {
-    if (name == "") {
+    if (name === "") {
       return false;
     }
     const addDataRef = collection(db, "tags");
@@ -229,7 +227,7 @@ const addData = ({ name }) => {
 //問題なく更新できれば true を返し、エラーが発生した場合は false を返す
 const updateData = ({ tagId, name }) => {
   try {
-    if (name == "") {
+    if (name === "") {
       return false;
     }
     const updateDataRef = doc(db, "tags", tagId);
