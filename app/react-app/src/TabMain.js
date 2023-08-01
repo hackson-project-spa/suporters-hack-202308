@@ -31,12 +31,10 @@ function TabMain() {
   useEffect(() => {
     getDocs(firebaseData).then((snapshot) => {
       setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
-      console.log("inputSearchTag A", inputSearchTag);
     });
 
     onSnapshot(firebaseData, (snapshot) => {
       setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
-      console.log("inputSearchTag S", inputSearchTag);
     });
   }, []);
 
