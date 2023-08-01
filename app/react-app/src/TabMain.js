@@ -26,15 +26,15 @@ function TabMain() {
   const [tabs, setTabs] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [inputSearchTag, setInputSearchTag] = useState("");
-  const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
 
   useEffect(() => {
+    const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
     getDocs(firebaseData).then((snapshot) => {
-      setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
+      setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
     });
 
     onSnapshot(firebaseData, (snapshot) => {
-      setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })).filter((tab) => tab.name.includes(inputSearchTag)));
+      setTabs(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
     });
   }, []);
 
@@ -62,6 +62,8 @@ function TabMain() {
               w="8vw"
               mb={4}
               onClick={() => {
+                const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
+
                 getDocs(firebaseData).then((snapshot) => {
                   setTabs(
                     snapshot.docs
