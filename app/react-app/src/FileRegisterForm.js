@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button, Center, HStack, Textarea, VStack, Text } from "@chakra-ui/react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Link as LinkRouter } from "react-router-dom";
+import DefineTags from "./DefineTags";
 
 function FileRegisterForm() {
   return (
@@ -48,6 +49,7 @@ function FileRegisterForm() {
           </HStack>
         </Center>
       </Box>
+      <DefineTags />
     </VStack>
   );
 }
