@@ -87,7 +87,7 @@ function FileTableList() {
           </Thead>
           <Tbody>
             {FileList.map((file) => (
-              <Tr>
+              <Tr key={file.id}>
                 <Td>{file.name}</Td>
                 <Td>{file.dir}</Td>
                 <Td>{file.abs}</Td>
