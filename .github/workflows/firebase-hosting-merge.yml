@@ -20,4 +20,3 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SUPORTERS_HACK_202308 }}"
           channelId: live
           projectId: suporters-hack-202308
-        working-directory: ./app
