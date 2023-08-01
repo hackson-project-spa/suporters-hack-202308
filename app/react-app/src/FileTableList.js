@@ -83,6 +83,7 @@ function FileTableList() {
               <Th>場所</Th>
               <Th>概要</Th>
               <Th>タグ</Th>
+              <Th>操作</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -90,7 +91,17 @@ function FileTableList() {
               <Tr key={file.id}>
                 <Td>{file.name}</Td>
                 <Td>{file.dir}</Td>
-                <Td>{file.abs}</Td>
+                {/* 10文字以上の場合は、10文字目以降は「...」と表示する */}
+                <Td>
+                  {file.abs.length > 10 ? (
+                    <Box>
+                      {file.abs.slice(0, 10)}
+                      ...
+                    </Box>
+                  ) : (
+                    <Box>{file.abs}</Box>
+                  )}
+                </Td>
                 <Td>
                   <HStack>
                     {file.tagIds.map((tagId) => (
@@ -99,6 +110,19 @@ function FileTableList() {
                         <TagCloseButton />
                       </Tag>
                     ))}
+                  </HStack>
+                </Td>
+                <Td>
+                  <HStack>
+                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      詳細
+                    </Button>
+                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      編集
+                    </Button>
+                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      削除
+                    </Button>
                   </HStack>
                 </Td>
               </Tr>

@@ -31,7 +31,9 @@ function Header(index) {
           </LinkRouter>
           {tabList.map((tab) => (
             <LinkRouter to={tab.path} key={tab.id}>
-              <Tab p={"4"}>{tab.name}</Tab>
+              <Tab p={"4"} _hover={{ color: "teal" }}>
+                {tab.name}
+              </Tab>
             </LinkRouter>
           ))}
         </HStack>
