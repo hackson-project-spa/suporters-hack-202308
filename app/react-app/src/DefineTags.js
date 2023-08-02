@@ -2,19 +2,25 @@ import React from "react";
 import { Box, Button, HStack, VStack, Text } from "@chakra-ui/react";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import db from "./firebase";
+import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore";
 
 function DefineTags() {
-  const tags = [
-    { id: 1, name: "tag1" },
-    { id: 2, name: "tag2" },
-    { id: 3, name: "tag3" },
-    { id: 4, name: "tag4" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-  ];
+  const [tags, setTags] = useState([]);
+  const [inputSearchTag, setInputSearchTag] = useState("");
+
+  useEffect(() => {
+    const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
+    getDocs(firebaseData).then((snapshot) => {
+      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+
+    onSnapshot(firebaseData, (snapshot) => {
+      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+  }, []);
+
   return (
     <Box>
       <VStack>
@@ -24,8 +30,32 @@ function DefineTags() {
             タグ名
           </FormLabel>
           <HStack>
-            <Input id="name" w="500px" placeholder="Basic usage" size="lg" mb={4} />
-            <Button size="lg" mb={4}>
+            <Input
+              id="name"
+              w="500px"
+              placeholder="Basic usage"
+              size="lg"
+              mb={4}
+              value={inputSearchTag}
+              onChange={(e) => {
+                setInputSearchTag(e.target.value);
+              }}
+            />
+            <Button
+              size="lg"
+              mb={4}
+              onClick={() => {
+                const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
+
+                getDocs(firebaseData).then((snapshot) => {
+                  setTags(
+                    snapshot.docs
+                      .map((doc) => ({ key: doc.id, ...doc.data() }))
+                      .filter((tab) => tab.name.includes(inputSearchTag))
+                  );
+                });
+              }}
+            >
               検索
             </Button>
           </HStack>
