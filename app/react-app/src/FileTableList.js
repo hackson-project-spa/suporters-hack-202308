@@ -1,4 +1,7 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import db from "./firebase";
+import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore";
 import {
   Box,
   HStack,
@@ -25,40 +28,38 @@ const FileList = [
     name: "test1",
     dir: "/index",
     abs: "テスト1なんだけど、失敗した",
-    tagIds: [1, 2],
+    tagIds: [],
   },
   {
     id: 2,
     name: "test2",
     dir: "/register",
     abs: "テスト2なんだけど、失敗した",
-    tagIds: [1, 3],
+    tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
   },
   {
     id: 3,
     name: "test3",
     dir: "/tag",
     abs: "テスト3なんだけど、失敗した",
-    tagIds: [2, 3],
-  },
-];
-
-const TagList = [
-  {
-    id: 1,
-    name: "あああああaaaaああああ",
-  },
-  {
-    id: 2,
-    name: "タグ2",
-  },
-  {
-    id: 3,
-    name: "タグssss3",
+    tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
   },
 ];
 
 function FileTableList() {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
+    getDocs(firebaseData).then((snapshot) => {
+      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+
+    onSnapshot(firebaseData, (snapshot) => {
+      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+  }, []);
+
   return (
     // 配列の項目を横並びで表にする
     <VStack>
@@ -105,8 +106,12 @@ function FileTableList() {
                 <Td>
                   <HStack>
                     {file.tagIds.map((tagId) => (
-                      <Tag key={tagId} size="sm" borderRadius="full" variant="solid" colorScheme="green">
-                        <TagLabel>{TagList.find((tag) => tag.id === tagId).name}</TagLabel>
+                      <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                        {tags
+                          .filter((tag) => tag.key === tagId)
+                          .map((tag) => {
+                            return <TagLabel>{tag.name}</TagLabel>;
+                          })}
                         <TagCloseButton />
                       </Tag>
                     ))}
