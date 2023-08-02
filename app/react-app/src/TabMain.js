@@ -70,14 +70,8 @@ function TabMain() {
                       .map((doc) => ({ key: doc.id, ...doc.data() }))
                       .filter((tab) => tab.name.includes(inputSearchTag))
                   );
-                  console.log(
-                    snapshot.docs
-                      .map((doc) => ({ key: doc.id, ...doc.data() }))
-                      .filter((tab) => tab.name.includes(inputSearchTag))
-                  );
                 });
-                console.log("inputSearchTag", inputSearchTag);
-                console.log("tabs", tabs);
+
               }}
             >
               検索
