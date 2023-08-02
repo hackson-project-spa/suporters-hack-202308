@@ -22,41 +22,49 @@ import {
   TagCloseButton,
 } from "@chakra-ui/react";
 
-const FileList = [
-  {
-    id: 1,
-    name: "test1",
-    dir: "/index",
-    abs: "テスト1なんだけど、失敗した",
-    tagIds: [],
-  },
-  {
-    id: 2,
-    name: "test2",
-    dir: "/register",
-    abs: "テスト2なんだけど、失敗した",
-    tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
-  },
-  {
-    id: 3,
-    name: "test3",
-    dir: "/tag",
-    abs: "テスト3なんだけど、失敗した",
-    tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
-  },
-];
+// const FileList = [
+//   {
+//     id: 1,
+//     name: "test1",
+//     dir: "/index",
+//     abs: "テスト1なんだけど、失敗した",
+//     tagIds: [],
+//   },
+//   {
+//     id: 2,
+//     name: "test2",
+//     dir: "/register",
+//     abs: "テスト2なんだけど、失敗した",
+//     tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
+//   },
+//   {
+//     id: 3,
+//     name: "test3",
+//     dir: "/tag",
+//     abs: "テスト3なんだけど、失敗した",
+//     tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
+//   },
+// ];
 
 function FileTableList() {
   const [tags, setTags] = useState([]);
+  const [FileList, setFileList] = useState([]);
 
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
+    const firebaseFileData = query(collection(db, "files"), where("name", "!=", ""));
     getDocs(firebaseData).then((snapshot) => {
       setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+    getDocs(firebaseFileData).then((snapshot) => {
+      setFileList(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
 
     onSnapshot(firebaseData, (snapshot) => {
       setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+    });
+    onSnapshot(firebaseFileData, (snapshot) => {
+      setFileList(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
   }, []);
 
