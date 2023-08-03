@@ -12,6 +12,7 @@ import {
   TableContainer,
   VStack,
   Tr,
+  Text,
   Th,
   Tbody,
   Td,
@@ -20,31 +21,16 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Textarea,
 } from "@chakra-ui/react";
-
-// const FileList = [
-//   {
-//     id: 1,
-//     name: "test1",
-//     dir: "/index",
-//     abs: "テスト1なんだけど、失敗した",
-//     tagIds: [],
-//   },
-//   {
-//     id: 2,
-//     name: "test2",
-//     dir: "/register",
-//     abs: "テスト2なんだけど、失敗した",
-//     tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
-//   },
-//   {
-//     id: 3,
-//     name: "test3",
-//     dir: "/tag",
-//     abs: "テスト3なんだけど、失敗した",
-//     tagIds: ["3NfiAoKaBn0insg58zt2", "3NfiAoKaBn0insg58zt2"],
-//   },
-// ];
 
 function FileTableList() {
   const [tags, setTags] = useState([]);
@@ -127,12 +113,14 @@ function FileTableList() {
                 </Td>
                 <Td>
                   <HStack>
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
-                      詳細
-                    </Button>
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
-                      編集
-                    </Button>
+                    <PopupFileDetail
+                      fileName={file.name}
+                      fileDir={file.dir}
+                      fileAbs={file.abs}
+                      fileTagIds={file.tagIds}
+                      tags={tags}
+                    />
+
                     <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
                       削除
                     </Button>
@@ -148,3 +136,118 @@ function FileTableList() {
 }
 
 export default FileTableList;
+
+function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isInputDisabled, setIsInputDisabled] = useState(true);
+  return (
+    <>
+      <Button size="sm" borderRadius="full" variant="solid" colorScheme="green" onClick={onOpen}>
+        詳細
+      </Button>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          setIsInputDisabled(true);
+        }}
+        size="5xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>ファイル詳細</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box>
+              <FormLabel mt={1} htmlFor="name">
+                ファイル名称
+              </FormLabel>
+              <Input
+                id="name"
+                w="42vw"
+                placeholder="Basic usage"
+                size="lg"
+                mb={4}
+                value={fileName}
+                isDisabled={isInputDisabled}
+              />
+            </Box>
+            <Box>
+              <FormLabel mt={1} htmlFor="name">
+                ファイル場所
+              </FormLabel>
+              <Input id="name" w="42vw" placeholder="Basic usage" size="lg" mb={4} value={fileDir} isDisabled={isInputDisabled} />
+            </Box>
+            <Box>
+              <FormLabel mt={1} htmlFor="name">
+                ファイル概要
+              </FormLabel>
+              <Textarea
+                id="name"
+                w="42vw"
+                h="15vw"
+                placeholder="Basic usage"
+                size="lg"
+                mb={4}
+                value={fileAbs}
+                isDisabled={isInputDisabled}
+              />
+            </Box>
+            <Box>
+              <FormLabel mt={1} htmlFor="name">
+                ファイルタグ
+              </FormLabel>
+              <HStack>
+                {fileTagIds.map((tagId) => (
+                  <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                    {tags
+                      .filter((tag) => tag.key === tagId)
+                      .map((tag) => {
+                        return <TagLabel>{tag.name}</TagLabel>;
+                      })}
+                    <TagCloseButton />
+                  </Tag>
+                ))}
+              </HStack>
+            </Box>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                onClose();
+                setIsInputDisabled(true);
+              }}
+            >
+              Close
+            </Button>
+
+            {isInputDisabled ? (
+              <Button mr={3} onClick={() => setIsInputDisabled(!isInputDisabled)}>
+                編集
+              </Button>
+            ) : (
+              <Button mr={3} onClick={() => setIsInputDisabled(!isInputDisabled)}>
+                保存
+              </Button>
+            )}
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() => {
+                // deleteDoc(doc(db, "files", "file-1"));
+                onClose();
+                setIsInputDisabled(true);
+              }}
+            >
+              削除
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
