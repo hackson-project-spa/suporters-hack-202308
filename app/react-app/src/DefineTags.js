@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { Box, Button, HStack, VStack, Text } from "@chakra-ui/react";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
@@ -7,14 +8,25 @@ function DefineTags() {
   const tags = [
     { id: 1, name: "tag1" },
     { id: 2, name: "tag2" },
-    { id: 3, name: "tag3" },
-    { id: 4, name: "tag4" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
-    { id: 5, name: "tag5" },
   ];
+  const [Tag, setCheckedItems] = useState([]);
+  const handleCheckboxChange = (tag) => {
+    let exists = false;
+
+    for (const t of Tag) {
+      if (tag.id === t.id) {
+        exists = true;
+        break;
+      }
+    }
+    if (exists) {
+      const newTags = Tag.filter((t) => t.id !== tag.id);
+      setCheckedItems(newTags);
+    } else {
+      setCheckedItems([...Tag, tag]);
+    }
+    // const Name = event.target.value;
+  };
   return (
     <Box>
       <VStack>
@@ -34,12 +46,18 @@ function DefineTags() {
       <Box overflowY="auto" maxH="10vw">
         <CheckboxGroup>
           {tags.map((tag) => (
-            <Box>
-              <Checkbox>{tag.name}</Checkbox>
+            <Box p={1}>
+              <Checkbox value={tag.name} onChange={() => handleCheckboxChange(tag)}>
+                {tag.name}
+              </Checkbox>
             </Box>
           ))}
         </CheckboxGroup>
       </Box>
+      <Text>
+        <handleCheckboxChange />
+        選択内容：{Tag.map((tag) => tag.name)}
+      </Text>
     </Box>
   );
 }
