@@ -29,7 +29,7 @@ function FileRegisterForm() {
           </FormLabel>
           <Input id="dir" w="500px" placeholder="Basic usage" size="lg" mb={4} />
           <FormLabel mt={1} htmlFor="name">
-            アブストラクト
+            概要
           </FormLabel>
           <Textarea type="abs" w="500px" placeholder="Basic usage" size="lg" mb={4} />
           <FormLabel mt={1} htmlFor="name">

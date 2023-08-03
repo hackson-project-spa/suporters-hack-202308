@@ -12,7 +12,6 @@ import {
   TableContainer,
   VStack,
   Tr,
-  Text,
   Th,
   Tbody,
   Td,
@@ -121,7 +120,7 @@ function FileTableList() {
                       tags={tags}
                     />
 
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="red">
                       削除
                     </Button>
                   </HStack>
@@ -140,9 +139,14 @@ export default FileTableList;
 function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
+  const [inputFileName, setInputFileName] = useState(fileName);
+  const [inputFileDir, setInputFileDir] = useState(fileDir);
+  const [inputFileAbs, setInputFileAbs] = useState(fileAbs);
+  const [inputFileTagIds, setInputFileTagIds] = useState(fileTagIds);
+
   return (
     <>
-      <Button size="sm" borderRadius="full" variant="solid" colorScheme="green" onClick={onOpen}>
+      <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" onClick={onOpen}>
         詳細
       </Button>
 
@@ -152,7 +156,7 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
           onClose();
           setIsInputDisabled(true);
         }}
-        size="5xl"
+        size="4xl"
       >
         <ModalOverlay />
         <ModalContent>
@@ -170,14 +174,30 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 size="lg"
                 mb={4}
                 value={fileName}
-                isDisabled={isInputDisabled}
+                isReadOnly={isInputDisabled}
+                value={inputFileName}
+                onChange={(e) => {
+                  setInputFileName(e.target.value);
+                }}
               />
             </Box>
             <Box>
               <FormLabel mt={1} htmlFor="name">
                 ファイル場所
               </FormLabel>
-              <Input id="name" w="42vw" placeholder="Basic usage" size="lg" mb={4} value={fileDir} isDisabled={isInputDisabled} />
+              <Input
+                id="name"
+                w="42vw"
+                placeholder="Basic usage"
+                size="lg"
+                mb={4}
+                value={fileDir}
+                isReadOnly={isInputDisabled}
+                value={inputFileDir}
+                onChange={(e) => {
+                  setInputFileDir(e.target.value);
+                }}
+              />
             </Box>
             <Box>
               <FormLabel mt={1} htmlFor="name">
@@ -191,7 +211,7 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 size="lg"
                 mb={4}
                 value={fileAbs}
-                isDisabled={isInputDisabled}
+                isReadOnly={isInputDisabled}
               />
             </Box>
             <Box>
@@ -199,16 +219,23 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 ファイルタグ
               </FormLabel>
               <HStack>
-                {fileTagIds.map((tagId) => (
-                  <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
-                    {tags
-                      .filter((tag) => tag.key === tagId)
-                      .map((tag) => {
-                        return <TagLabel>{tag.name}</TagLabel>;
-                      })}
-                    <TagCloseButton />
-                  </Tag>
-                ))}
+                {/* 枠線をつけて、タグを表示する 枠線の色はinputと同じ、やや太い枠*/}
+                <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
+                  {fileTagIds.map((tagId) => (
+                    <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      {tags
+                        .filter((tag) => tag.key === tagId)
+                        .map((tag) => {
+                          return <TagLabel>{tag.name}</TagLabel>;
+                        })}
+                      <TagCloseButton />
+                    </Tag>
+                  ))}
+                </HStack>
+                {/* タグの編集ボタン */}
+                <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue">
+                  タグ編集
+                </Button>
               </HStack>
             </Box>
           </ModalBody>
