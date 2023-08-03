@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Center, HStack, Textarea, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Textarea, VStack, Tag, TagCloseButton, TagLabel } from "@chakra-ui/react";
 import {
   FormControl,
   FormLabel,
@@ -16,6 +16,12 @@ import { Link as LinkRouter } from "react-router-dom";
 import DefineTags from "./DefineTags";
 
 function FileRegisterForm() {
+  const tags = [
+    { key: 1, name: "tag1" },
+    { key: 2, name: "tag2" },
+    { key: 3, name: "tag3" },
+    { key: 4, name: "tag4" },
+  ];
   return (
     <VStack>
       <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
@@ -36,9 +42,18 @@ function FileRegisterForm() {
             タグ
           </FormLabel>
           <HStack>
-            <Box bg={"#E2E8F0"} p={4} rounded="base">
+            {/* <Box bg={"#E2E8F0"} p={4} rounded="base">
               <Text fontSize="lg">tab_name</Text>
-            </Box>
+            </Box> */}
+            {/* 枠線をつけて、タグを表示する 枠線の色はinputと同じ、やや太い枠*/}
+            <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
+              {tags.map((tag) => (
+                <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                  <TagLabel>{tag.name}</TagLabel>
+                  <TagCloseButton />
+                </Tag>
+              ))}
+            </HStack>
             <Popover placement="top">
               <PopoverTrigger>
                 <Button size="lg" mb={4}>
