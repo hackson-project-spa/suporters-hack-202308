@@ -7,6 +7,7 @@ import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, que
 
 function DefineTags({ checkedItems, setCheckedItems }) {
   const [tags, setTags] = useState([]);
+  const [eternal, setEternal] = useState([]);
   const [inputSearchTag, setInputSearchTag] = useState("");
   // const [checkedItems, setCheckedItems] = useState([]);
 
@@ -23,8 +24,6 @@ function DefineTags({ checkedItems, setCheckedItems }) {
         const newCheckedItems = checkedItems.filter((t) => t.key !== tag.key);
         setCheckedItems(newCheckedItems);
       } else {
-        const newtags = tags.filter((t) => t.key !== tag.key);
-        setTags(newtags);
         setCheckedItems([...checkedItems, tag]);
       }
     } else {
@@ -35,17 +34,19 @@ function DefineTags({ checkedItems, setCheckedItems }) {
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
     getDocs(firebaseData).then((snapshot) => {
-      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+      setEternal(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
     });
-
     onSnapshot(firebaseData, (snapshot) => {
-      setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
+      setEternal(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
     });
   }, []);
   useEffect(() => {
-    setTags([...tags, tags.filter((tab) => checkedItems.every((t) => t.key !== tab.key))]);
-    console.log(tags);
+    setTags(eternal.filter((tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key)));
   }, [checkedItems]);
+
+  useEffect(() => {
+    setTags(eternal);
+  }, [eternal]);
 
   return (
     <Box>
@@ -68,17 +69,11 @@ function DefineTags({ checkedItems, setCheckedItems }) {
               size="lg"
               mb={4}
               onClick={() => {
-                const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
-
-                getDocs(firebaseData).then((snapshot) => {
-                  setTags(
-                    snapshot.docs
-                      .map((doc) => ({ key: doc.id, ...doc.data() }))
-                      .filter(
-                        (tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key)
-                      )
-                  );
-                });
+                setTags(
+                  eternal.filter(
+                    (tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key)
+                  )
+                );
               }}
             >
               検索

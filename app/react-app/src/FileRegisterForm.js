@@ -88,7 +88,7 @@ function FileRegisterForm() {
                 </Tag>
               ))}
             </HStack>
-            <Popover placement="top" closeOnBlur={false}>
+            <Popover placement="bottom" closeOnBlur={false}>
               <PopoverTrigger>
                 <Button size="lg" mb={4}>
                   選択
@@ -107,7 +107,16 @@ function FileRegisterForm() {
         </FormControl>
         <Center p={4}>
           <HStack spacing={4}>
-            <Button size="lg" mb={4}>
+            <Button
+              size="lg"
+              mb={4}
+              onClick={() => {
+                setInputFileName("");
+                setInputFileDir("");
+                setInputFileAbs("");
+                setInputFileTags([]);
+              }}
+            >
               キャンセル
             </Button>
             <LinkRouter to="/index">
