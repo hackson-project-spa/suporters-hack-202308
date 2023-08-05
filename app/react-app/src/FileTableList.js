@@ -47,6 +47,7 @@ function FileTableList() {
 
   const [tags, setTags] = useState([]);
   const [FileList, setFileList] = useState([]);
+  const [fileListWithTagNames, setFileListWithTagNames] = useState([]);
   const [indexFileName, setIndexFileName] = useState("");
   const [indexFileDir, setIndexFileDir] = useState("");
   const [indexFileAbs, setIndexFileAbs] = useState("");
@@ -69,6 +70,20 @@ function FileTableList() {
       setFileList(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
   }, []);
+
+  useEffect(() => {
+    setFileListWithTagNames(
+      FileList.map((file) => ({
+        id: file.id,
+        name: file.name,
+        dir: file.dir,
+        abs: file.abs,
+        tagIds: file.tagIds.map((tagId) => {
+          return { key: tagId, name: tags.filter((tag) => tag.key === tagId)[0].name };
+        }),
+      }))
+    );
+  }, [FileList, tags]);
 
   const indexFunc = () => {
     const firebaseFileData = query(collection(db, "files"), where("name", "!=", ""));
@@ -201,7 +216,7 @@ function FileTableList() {
             </Tr>
           </Thead>
           <Tbody>
-            {FileList.map((file) => (
+            {fileListWithTagNames.map((file) => (
               <Tr key={file.id}>
                 <Td>{file.name}</Td>
                 <Td>{file.dir}</Td>
@@ -219,12 +234,8 @@ function FileTableList() {
                 <Td>
                   <HStack>
                     {file.tagIds.map((tagId) => (
-                      <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId + file.id}>
-                        {tags
-                          .filter((tag) => tag.key === tagId)
-                          .map((tag) => {
-                            return <TagLabel key={tagId + file.id + "tag"}>{tag.name}</TagLabel>;
-                          })}
+                      <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId.key + file.id}>
+                        <TagLabel key={tagId.key + file.id + "tag"}>{tagId.name}</TagLabel>
                         <TagCloseButton />
                       </Tag>
                     ))}
@@ -259,6 +270,8 @@ function FileTableList() {
           </Tbody>
         </Table>
       </TableContainer>
+      {console.log("FileList", FileList)}
+      {console.log("fileListWithTagNames", fileListWithTagNames)}
     </VStack>
   );
 }
@@ -360,11 +373,14 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                   {inputFileTagIds.map((tag) => (
                     <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
                       <TagLabel>{tag.name}</TagLabel>
-                      <TagCloseButton
-                        onClick={() => {
-                          HandleDelete(tag);
-                        }}
-                      />
+                      {isInputDisabled ? null : (
+                        <TagCloseButton
+                          onClick={() => {
+                            HandleDelete(tag);
+                          }}
+                          isDisabled={isInputDisabled}
+                        />
+                      )}
                     </Tag>
                   ))}
                 </HStack>
