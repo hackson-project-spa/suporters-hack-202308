@@ -287,6 +287,7 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
   const [inputFileAbs, setInputFileAbs] = useState(fileAbs);
   const [inputFileTagIds, setInputFileTagIds] = useState(fileTagIds);
   const [isTagPopClose, setIsTagPopClose] = useState(true);
+  const tagIdsInitial = fileTagIds;
 
   const HandleDelete = (tag) => {
     setInputFileTagIds(inputFileTagIds.filter((t) => t.key !== tag.key));
@@ -302,7 +303,10 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          setIsInputDisabled(true);
+          if (!isInputDisabled) {
+            setInputFileTagIds(tagIdsInitial);
+            setIsInputDisabled(true);
+          }
         }}
         size="4xl"
       >
