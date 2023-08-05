@@ -460,6 +460,7 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
               onClick={() => {
                 onClose();
                 setIsInputDisabled(true);
+                setIsTagEdit(false);
               }}
             >
               Close
@@ -470,7 +471,7 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 mr={3}
                 onClick={() => {
                   setIsInputDisabled(!isInputDisabled);
-                  setIsTagPopClose(!isTagPopClose);
+                  setIsTagPopClose(true);
                 }}
               >
                 編集
@@ -480,7 +481,7 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 mr={3}
                 onClick={() => {
                   setIsInputDisabled(!isInputDisabled);
-                  setIsTagPopClose(!isTagPopClose);
+                  setIsTagPopClose(false);
                   setIsTagEdit(false);
                   updateData({
                     fileId: fileId,
