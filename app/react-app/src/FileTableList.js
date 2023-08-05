@@ -29,11 +29,20 @@ import {
   ModalCloseButton,
   useDisclosure,
   Textarea,
+  Text,
+  Spacer,
+  Stack,
 } from "@chakra-ui/react";
 
 function FileTableList() {
+  const testArray = ["b", "v", "s", "a"];
+
   const [tags, setTags] = useState([]);
   const [FileList, setFileList] = useState([]);
+  const [indexFileName, setIndexFileName] = useState("");
+  const [indexFileDir, setIndexFileDir] = useState("");
+  const [indexFileAbs, setIndexFileAbs] = useState("");
+  const [indexFileTagIds, setIndexFileTagIds] = useState(testArray);
 
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
@@ -53,21 +62,124 @@ function FileTableList() {
     });
   }, []);
 
+  const indexFunc = () => {
+    const firebaseFileData = query(collection(db, "files"), where("name", "!=", ""));
+    getDocs(firebaseFileData).then((snapshot) => {
+      setFileList(
+        snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter((file) => {
+            console.log(indexFileTagIds.every((tagId) => file.tagIds.includes(tagId)));
+            return (
+              file.name.includes(indexFileName) &&
+              file.dir.includes(indexFileDir) &&
+              file.abs.includes(indexFileAbs) &&
+              indexFileTagIds.every((tagId) => file.tagIds.includes(tagId))
+            );
+          })
+      );
+      console.log(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    });
+    setIndexFileName("");
+    setIndexFileDir("");
+    setIndexFileAbs("");
+    setIndexFileTagIds([]);
+  };
+
   return (
     // 配列の項目を横並びで表にする
     <VStack>
-      <Box>
-        <FormLabel mt={1} htmlFor="name">
-          タグ名称検索
-        </FormLabel>
-        <HStack>
-          <Input id="name" w="42vw" placeholder="Basic usage" size="lg" mb={4} />
-          <Button size="lg" w="8vw" mb={4}>
-            検索
-          </Button>
+      {/* 枠線をつけえる */}
+      <Box mt={3} border="1px solid #CBD5E0" borderRadius="md" p={3}>
+        {/* ファイル名称、場所、概要、タグで検索。
+        タグ検索は含むタグをリストから複数選択させ、選択したもの全てを含むものを検索
+        検索ボタンは一つで、or検索かand検索かを選べる*/}
+        <HStack mb={3}>
+          <HStack mr={5}>
+            <FormLabel mt={1} htmlFor="name" w="6vw" mb={4}>
+              ファイル名称
+            </FormLabel>
+            <Input
+              id="city"
+              w="21vw"
+              placeholder="Basic usage"
+              size="md"
+              mb={4}
+              value={indexFileName}
+              onChange={(e) => {
+                setIndexFileName(e.target.value);
+              }}
+            />
+          </HStack>
+          <HStack>
+            <FormLabel mt={1} htmlFor="name" w="3vw" mb={4}>
+              場所
+            </FormLabel>
+            <Input
+              id="tel"
+              w="21vw"
+              placeholder="Basic usage"
+              size="md"
+              mb={4}
+              value={indexFileDir}
+              onChange={(e) => {
+                setIndexFileDir(e.target.value);
+              }}
+            />
+          </HStack>
         </HStack>
+        {/* タグはリストから複数選択させる */}
+        <HStack mb={3}>
+          <HStack mr={5}>
+            <FormLabel mt={1} htmlFor="name" w="6vw" mb={2}>
+              概要
+            </FormLabel>
+            <Input
+              id="name"
+              w="21vw"
+              placeholder="Basic usage"
+              size="md"
+              mb={2}
+              value={indexFileAbs}
+              onChange={(e) => {
+                setIndexFileAbs(e.target.value);
+              }}
+            />
+          </HStack>
+          <HStack>
+            <FormLabel mt={1} htmlFor="name" w="3vw" mb={2}>
+              タグ
+            </FormLabel>
+          </HStack>
+        </HStack>
+        {/* 検索ボタン */}
+        <VStack direction="row" spacing={4} align="center">
+          <HStack>
+            <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" mb={3} onClick={indexFunc}>
+              検索
+            </Button>
+            <Button
+              size="sm"
+              borderRadius="full"
+              variant="solid"
+              colorScheme="red"
+              mb={3}
+              onClick={() => {
+                setIndexFileName("");
+                setIndexFileDir("");
+                setIndexFileAbs("");
+                setIndexFileTagIds([]);
+                indexFunc();
+              }}
+            >
+              クリア
+            </Button>
+          </HStack>
+        </VStack>
       </Box>
 
+      {/* ファイル一覧 */}
+      <Spacer />
       <TableContainer>
         <Table variant="simple">
           <TableCaption>Imperial to metric conversion factors</TableCaption>
@@ -99,11 +211,11 @@ function FileTableList() {
                 <Td>
                   <HStack>
                     {file.tagIds.map((tagId) => (
-                      <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId + file.id}>
                         {tags
                           .filter((tag) => tag.key === tagId)
                           .map((tag) => {
-                            return <TagLabel>{tag.name}</TagLabel>;
+                            return <TagLabel key={tagId + file.id + "tag"}>{tag.name}</TagLabel>;
                           })}
                         <TagCloseButton />
                       </Tag>
@@ -113,6 +225,7 @@ function FileTableList() {
                 <Td>
                   <HStack>
                     <PopupFileDetail
+                      fileId={file.id}
                       fileName={file.name}
                       fileDir={file.dir}
                       fileAbs={file.abs}
@@ -120,7 +233,15 @@ function FileTableList() {
                       tags={tags}
                     />
 
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="red">
+                    <Button
+                      size="sm"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="red"
+                      onClick={() => {
+                        deleteData({ fileId: file.id });
+                      }}
+                    >
                       削除
                     </Button>
                   </HStack>
@@ -136,7 +257,7 @@ function FileTableList() {
 
 export default FileTableList;
 
-function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
+function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [inputFileName, setInputFileName] = useState(fileName);
@@ -173,9 +294,8 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 placeholder="Basic usage"
                 size="lg"
                 mb={4}
-                value={fileName}
-                isReadOnly={isInputDisabled}
                 value={inputFileName}
+                isReadOnly={isInputDisabled}
                 onChange={(e) => {
                   setInputFileName(e.target.value);
                 }}
@@ -191,9 +311,8 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 placeholder="Basic usage"
                 size="lg"
                 mb={4}
-                value={fileDir}
-                isReadOnly={isInputDisabled}
                 value={inputFileDir}
+                isReadOnly={isInputDisabled}
                 onChange={(e) => {
                   setInputFileDir(e.target.value);
                 }}
@@ -210,8 +329,11 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 placeholder="Basic usage"
                 size="lg"
                 mb={4}
-                value={fileAbs}
+                value={inputFileAbs}
                 isReadOnly={isInputDisabled}
+                onChange={(e) => {
+                  setInputFileAbs(e.target.value);
+                }}
               />
             </Box>
             <Box>
@@ -222,11 +344,11 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 {/* 枠線をつけて、タグを表示する 枠線の色はinputと同じ、やや太い枠*/}
                 <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
                   {fileTagIds.map((tagId) => (
-                    <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                    <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId + "popup"}>
                       {tags
                         .filter((tag) => tag.key === tagId)
                         .map((tag) => {
-                          return <TagLabel>{tag.name}</TagLabel>;
+                          return <TagLabel key={tag.key + "popup_index"}>{tag.name}</TagLabel>;
                         })}
                       <TagCloseButton />
                     </Tag>
@@ -257,7 +379,19 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
                 編集
               </Button>
             ) : (
-              <Button mr={3} onClick={() => setIsInputDisabled(!isInputDisabled)}>
+              <Button
+                mr={3}
+                onClick={() => {
+                  setIsInputDisabled(!isInputDisabled);
+                  updateData({
+                    fileId: fileId,
+                    name: inputFileName,
+                    dir: inputFileDir,
+                    abs: inputFileAbs,
+                    tagIds: inputFileTagIds,
+                  });
+                }}
+              >
                 保存
               </Button>
             )}
@@ -265,7 +399,7 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
               colorScheme="red"
               mr={3}
               onClick={() => {
-                // deleteDoc(doc(db, "files", "file-1"));
+                deleteData({ fileId: fileId });
                 onClose();
                 setIsInputDisabled(true);
               }}
@@ -278,3 +412,60 @@ function PopupFileDetail({ fileName, fileDir, fileAbs, fileTagIds, tags }) {
     </>
   );
 }
+
+// 関数addData(入力値:name=string)を定義
+// 自動生成したドキュメント ID を使用してデータを追加する
+// 問題なく追加できれば true を返し、エラーが発生した場合は false を返す
+const addData = ({ name }) => {
+  try {
+    if (name === "") {
+      return false;
+    }
+    const addDataRef = collection(db, "tags");
+    addDoc(addDataRef, {
+      name: name,
+    });
+    return true;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    return false;
+  }
+};
+
+//関数updateData
+//ドキュメント ID を使用してデータを更新する
+//問題なく更新できれば true を返し、エラーが発生した場合は false を返す
+const updateData = ({ fileId, name, dir, abs, tagIds }) => {
+  try {
+    if (name === "") {
+      return false;
+    }
+    const updateDataRef = doc(db, "files", fileId);
+    updateDoc(updateDataRef, {
+      name: name,
+      dir: dir,
+      abs: abs,
+      tagIds: tagIds,
+    });
+    console.log("Document successfully updated!");
+    return true;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    return false;
+  }
+};
+
+//関数deleteData(入力値:tagId=string)を定義
+//ドキュメント ID を使用してデータを削除する
+//問題なく削除できれば true を返し、エラーが発生した場合は false を返す
+const deleteData = ({ fileId }) => {
+  try {
+    const deleteDataRef = doc(db, "files", fileId);
+    deleteDoc(deleteDataRef);
+    console.log("Document successfully deleted!");
+    return true;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    return false;
+  }
+};

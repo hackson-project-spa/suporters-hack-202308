@@ -12,6 +12,9 @@ import {
   PopoverBody,
   PopoverContent,
 } from "@chakra-ui/react";
+import db from "./firebase";
+import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Link as LinkRouter } from "react-router-dom";
 import DefineTags from "./DefineTags";
 
@@ -22,6 +25,11 @@ function FileRegisterForm() {
     { key: 3, name: "tag3" },
     { key: 4, name: "tag4" },
   ];
+  const [inputFileName, setInputFileName] = useState("");
+  const [inputFileDir, setInputFileDir] = useState("");
+  const [inputFileAbs, setInputFileAbs] = useState("");
+  const [inputFileTags, setInputFileTags] = useState([]);
+
   return (
     <VStack>
       <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
@@ -29,15 +37,39 @@ function FileRegisterForm() {
           <FormLabel mt={1} htmlFor="name">
             ファイル名
           </FormLabel>
-          <Input id="name" w="500px" placeholder="Basic usage" size="lg" mb={4} />
+          <Input
+            id="name"
+            w="500px"
+            placeholder="Basic usage"
+            size="lg"
+            mb={4}
+            value={inputFileName}
+            onChange={(e) => setInputFileName(e.target.value)}
+          />
           <FormLabel mt={1} htmlFor="name">
             ファイル場所
           </FormLabel>
-          <Input id="dir" w="500px" placeholder="Basic usage" size="lg" mb={4} />
+          <Input
+            id="dir"
+            w="500px"
+            placeholder="Basic usage"
+            size="lg"
+            mb={4}
+            value={inputFileDir}
+            onChange={(e) => setInputFileDir(e.target.value)}
+          />
           <FormLabel mt={1} htmlFor="name">
             概要
           </FormLabel>
-          <Textarea type="abs" w="500px" placeholder="Basic usage" size="lg" mb={4} />
+          <Textarea
+            type="abs"
+            w="500px"
+            placeholder="Basic usage"
+            size="lg"
+            mb={4}
+            value={inputFileAbs}
+            onChange={(e) => setInputFileAbs(e.target.value)}
+          />
           <FormLabel mt={1} htmlFor="name">
             タグ
           </FormLabel>
@@ -77,11 +109,25 @@ function FileRegisterForm() {
               キャンセル
             </Button>
             <LinkRouter to="/index">
-              <Button size="lg" mb={4}>
+              <Button
+                size="lg"
+                mb={4}
+                onClick={() => addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] })}
+              >
                 登録
               </Button>
             </LinkRouter>
-            <Button size="lg" mb={4}>
+            <Button
+              size="lg"
+              mb={4}
+              onClick={() => {
+                addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] });
+                setInputFileName("");
+                setInputFileDir("");
+                setInputFileAbs("");
+                setInputFileTags([]);
+              }}
+            >
               続けて登録
             </Button>
           </HStack>
@@ -92,3 +138,25 @@ function FileRegisterForm() {
 }
 
 export default FileRegisterForm;
+
+// 関数addData(入力値:name=string)を定義
+// 自動生成したドキュメント ID を使用してデータを追加する
+// 問題なく追加できれば true を返し、エラーが発生した場合は false を返す
+const addData = ({ fileName, fileDir, fileAbs, fileTags }) => {
+  try {
+    if (fileName === "") {
+      return false;
+    }
+    const addDataRef = collection(db, "files");
+    addDoc(addDataRef, {
+      name: fileName,
+      dir: fileDir,
+      abs: fileAbs,
+      tagIds: fileTags,
+    });
+    return true;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    return false;
+  }
+};
