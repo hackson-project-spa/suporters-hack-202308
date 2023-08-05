@@ -236,7 +236,7 @@ function FileTableList() {
                     {file.tagIds.map((tagId) => (
                       <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId.key + file.id}>
                         <TagLabel key={tagId.key + file.id + "tag"}>{tagId.name}</TagLabel>
-                        <TagCloseButton />
+                        {/* <TagCloseButton /> */}
                       </Tag>
                     ))}
                   </HStack>
