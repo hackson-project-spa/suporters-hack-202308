@@ -450,6 +450,7 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 onClick={() => {
                   setIsInputDisabled(!isInputDisabled);
                   setIsTagPopClose(!isTagPopClose);
+                  setIsTagEdit(false);
                   updateData({
                     fileId: fileId,
                     name: inputFileName,
