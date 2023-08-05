@@ -311,13 +311,13 @@ export default FileTableList;
 
 function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isTagPopupOpen, onTagPopupOpen, onTagPopupClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [inputFileName, setInputFileName] = useState(fileName);
   const [inputFileDir, setInputFileDir] = useState(fileDir);
   const [inputFileAbs, setInputFileAbs] = useState(fileAbs);
   const [inputFileTagIds, setInputFileTagIds] = useState(fileTagIds);
-  const [isTagPopClose, setIsTagPopClose] = useState(true);
+  const [isTagPopClose, setIsTagPopClose] = useState(false);
+  const [isTagEdit, setIsTagEdit] = useState(false);
   const tagIdsInitial = fileTagIds;
 
   const HandleDelete = (tag) => {
@@ -421,15 +421,28 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 </HStack>
                 {/* タグの編集ボタン */}
 
-                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagPopupOpen} onClose={onTagPopupClose}>
+                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagEdit && isTagPopClose}>
                   <PopoverTrigger>
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" isDisabled={isInputDisabled}>
+                    <Button
+                      size="sm"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="blue"
+                      isDisabled={isInputDisabled}
+                      onClick={() => {
+                        setIsTagEdit(!isTagEdit);
+                      }}
+                    >
                       タグ編集
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverArrow />
-                    <PopoverCloseButton />
+                    <PopoverCloseButton
+                      onClick={() => {
+                        setIsTagEdit(!isTagEdit);
+                      }}
+                    />
                     <PopoverHeader>タグを選択</PopoverHeader>
                     <PopoverBody>
                       <DefineTags checkedItems={inputFileTagIds} setCheckedItems={setInputFileTagIds} />
@@ -453,15 +466,22 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
             </Button>
 
             {isInputDisabled ? (
-              <Button mr={3} onClick={() => setIsInputDisabled(!isInputDisabled)}>
+              <Button
+                mr={3}
+                onClick={() => {
+                  setIsInputDisabled(!isInputDisabled);
+                  setIsTagPopClose(!isTagPopClose);
+                }}
+              >
                 編集
               </Button>
             ) : (
               <Button
                 mr={3}
                 onClick={() => {
-                  // onTagPopupClose();
                   setIsInputDisabled(!isInputDisabled);
+                  setIsTagPopClose(!isTagPopClose);
+                  setIsTagEdit(false);
                   updateData({
                     fileId: fileId,
                     name: inputFileName,
