@@ -266,8 +266,8 @@ function FileTableList() {
 export default FileTableList;
 
 function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { isTagPopupOpen, onTagPopupOpen, onTagPopupClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [inputFileName, setInputFileName] = useState(fileName);
   const [inputFileDir, setInputFileDir] = useState(fileDir);
@@ -370,9 +370,15 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 </HStack>
                 {/* タグの編集ボタン */}
 
-                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagPopupOpen} onClose={onTagPopupClose}>
+                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagPopupOpen} onClose={() => onTagPopupClose}>
                   <PopoverTrigger>
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" isDisabled={isInputDisabled}>
+                    <Button
+                      size="sm"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="blue"
+                      isDisabled={isInputDisabled}
+                    >
                       タグ編集
                     </Button>
                   </PopoverTrigger>
@@ -409,8 +415,8 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
               <Button
                 mr={3}
                 onClick={() => {
-                  // onTagPopupClose();
                   setIsInputDisabled(!isInputDisabled);
+                  // onTagPopupClose();
                   updateData({
                     fileId: fileId,
                     name: inputFileName,

@@ -106,7 +106,6 @@ function DefineTags({ checkedItems, setCheckedItems }) {
           </Tbody>
         </Table>
       </Box>
-      <Text>選択内容：{checkedItems.map((tag) => tag.name)}</Text>
     </Box>
   );
 }
