@@ -19,16 +19,14 @@ import { Link as LinkRouter } from "react-router-dom";
 import DefineTags from "./DefineTags";
 
 function FileRegisterForm() {
-  const tags = [
-    { key: 1, name: "tag1" },
-    { key: 2, name: "tag2" },
-    { key: 3, name: "tag3" },
-    { key: 4, name: "tag4" },
-  ];
+  const [checkedItems, setCheckedItems] = useState([]);
   const [inputFileName, setInputFileName] = useState("");
   const [inputFileDir, setInputFileDir] = useState("");
   const [inputFileAbs, setInputFileAbs] = useState("");
   const [inputFileTags, setInputFileTags] = useState([]);
+  const HandleDelete = (tag) => {
+    setCheckedItems(checkedItems.filter((t) => t.key !== tag.key));
+  };
 
   return (
     <VStack>
@@ -79,14 +77,18 @@ function FileRegisterForm() {
             </Box> */}
             {/* 枠線をつけて、タグを表示する 枠線の色はinputと同じ、やや太い枠*/}
             <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
-              {tags.map((tag) => (
+              {checkedItems.map((tag) => (
                 <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
                   <TagLabel>{tag.name}</TagLabel>
-                  <TagCloseButton />
+                  <TagCloseButton
+                    onClick={() => {
+                      HandleDelete(tag);
+                    }}
+                  />
                 </Tag>
               ))}
             </HStack>
-            <Popover placement="top">
+            <Popover placement="top" closeOnBlur={false}>
               <PopoverTrigger>
                 <Button size="lg" mb={4}>
                   選択
@@ -97,7 +99,7 @@ function FileRegisterForm() {
                 <PopoverCloseButton />
                 <PopoverHeader>タグを選択</PopoverHeader>
                 <PopoverBody>
-                  <DefineTags />
+                  <DefineTags checkedItems={checkedItems} setCheckedItems={setCheckedItems} />
                 </PopoverBody>
               </PopoverContent>
             </Popover>
@@ -112,7 +114,9 @@ function FileRegisterForm() {
               <Button
                 size="lg"
                 mb={4}
-                onClick={() => addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] })}
+                onClick={() =>
+                  addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] })
+                }
               >
                 登録
               </Button>

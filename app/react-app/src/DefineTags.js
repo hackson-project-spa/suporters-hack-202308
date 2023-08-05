@@ -5,27 +5,27 @@ import { useEffect, useState } from "react";
 import db from "./firebase";
 import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore";
 
-function DefineTags() {
+function DefineTags({ checkedItems, setCheckedItems }) {
   const [tags, setTags] = useState([]);
   const [inputSearchTag, setInputSearchTag] = useState("");
-  const [CheckedItems, setCheckedItems] = useState([]);
+  // const [checkedItems, setCheckedItems] = useState([]);
 
   const HandleCheckboxChange = (tag) => {
     let exists = false;
-    if (CheckedItems.length <= 2) {
-      for (const t of CheckedItems) {
+    if (checkedItems.length <= 2) {
+      for (const t of checkedItems) {
         if (tag.key === t.key) {
           exists = true;
           break;
         }
       }
       if (exists) {
-        const newCheckedItems = CheckedItems.filter((t) => t.key !== tag.key);
+        const newCheckedItems = checkedItems.filter((t) => t.key !== tag.key);
         setCheckedItems(newCheckedItems);
       } else {
         const newtags = tags.filter((t) => t.key !== tag.key);
         setTags(newtags);
-        setCheckedItems([...CheckedItems, tag]);
+        setCheckedItems([...checkedItems, tag]);
       }
     } else {
       alert("タグは3つまでです");
@@ -42,6 +42,10 @@ function DefineTags() {
       setTags(snapshot.docs.map((doc) => ({ key: doc.id, ...doc.data() })));
     });
   }, []);
+  useEffect(() => {
+    setTags([...tags, tags.filter((tab) => checkedItems.every((t) => t.key !== tab.key))]);
+    console.log(tags);
+  }, [checkedItems]);
 
   return (
     <Box>
@@ -70,7 +74,9 @@ function DefineTags() {
                   setTags(
                     snapshot.docs
                       .map((doc) => ({ key: doc.id, ...doc.data() }))
-                      .filter((tab) => tab.name.includes(inputSearchTag))
+                      .filter(
+                        (tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key)
+                      )
                   );
                 });
               }}
@@ -92,7 +98,6 @@ function DefineTags() {
                   <Button
                     onClick={() => {
                       HandleCheckboxChange(tag);
-                      console.log(CheckedItems);
                     }}
                     colorScheme="blue"
                     fontSize={"sm"}
@@ -106,7 +111,7 @@ function DefineTags() {
           </Tbody>
         </Table>
       </Box>
-      <Text>選択内容：{CheckedItems.map((tag) => tag.name)}</Text>
+      <Text>選択内容：{checkedItems.map((tag) => tag.name)}</Text>
     </Box>
   );
 }
