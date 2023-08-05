@@ -51,7 +51,7 @@ function FileTableList() {
   const [indexFileName, setIndexFileName] = useState("");
   const [indexFileDir, setIndexFileDir] = useState("");
   const [indexFileAbs, setIndexFileAbs] = useState("");
-  const [indexFileTagIds, setIndexFileTagIds] = useState(testArray);
+  const [indexFileTagIds, setIndexFileTagIds] = useState([]);
 
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
@@ -97,7 +97,7 @@ function FileTableList() {
               file.name.includes(indexFileName) &&
               file.dir.includes(indexFileDir) &&
               file.abs.includes(indexFileAbs) &&
-              indexFileTagIds.every((tagId) => file.tagIds.includes(tagId))
+              indexFileTagIds.every((tagId) => file.tagIds.includes(tagId.key))
             );
           })
       );
@@ -173,6 +173,37 @@ function FileTableList() {
             <FormLabel mt={1} htmlFor="name" w="3vw" mb={2}>
               タグ
             </FormLabel>
+            <HStack>
+              <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
+                {indexFileTagIds.map((tag) => (
+                  <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                    <TagLabel>{tag.name}</TagLabel>
+                    <TagCloseButton
+                      onClick={() => {
+                        setIndexFileTagIds(indexFileTagIds.filter((t) => t.key !== tag.key));
+                      }}
+                    />
+                  </Tag>
+                ))}
+              </HStack>
+            </HStack>
+            {/* タグの編集ボタン */}
+
+            <Popover placement="bottom" closeOnBlur={false}>
+              <PopoverTrigger>
+                <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue">
+                  タグ検索
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>タグを選択</PopoverHeader>
+                <PopoverBody>
+                  <DefineTags checkedItems={indexFileTagIds} setCheckedItems={setIndexFileTagIds} />
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </HStack>
         </HStack>
         {/* 検索ボタン */}
