@@ -23,7 +23,6 @@ function FileRegisterForm() {
   const [inputFileName, setInputFileName] = useState("");
   const [inputFileDir, setInputFileDir] = useState("");
   const [inputFileAbs, setInputFileAbs] = useState("");
-  const [inputFileTags, setInputFileTags] = useState([]);
   const HandleDelete = (tag) => {
     setCheckedItems(checkedItems.filter((t) => t.key !== tag.key));
   };
@@ -114,7 +113,7 @@ function FileRegisterForm() {
                 setInputFileName("");
                 setInputFileDir("");
                 setInputFileAbs("");
-                setInputFileTags([]);
+                setCheckedItems([]);
               }}
             >
               キャンセル
@@ -124,7 +123,12 @@ function FileRegisterForm() {
                 size="lg"
                 mb={4}
                 onClick={() =>
-                  addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] })
+                  addData({
+                    fileName: inputFileName,
+                    fileDir: inputFileDir,
+                    fileAbs: inputFileAbs,
+                    fileTags: checkedItems.map((t) => t.key),
+                  })
                 }
               >
                 登録
@@ -134,11 +138,16 @@ function FileRegisterForm() {
               size="lg"
               mb={4}
               onClick={() => {
-                addData({ fileName: inputFileName, fileDir: inputFileDir, fileAbs: inputFileAbs, fileTags: [] });
+                addData({
+                  fileName: inputFileName,
+                  fileDir: inputFileDir,
+                  fileAbs: inputFileAbs,
+                  fileTags: checkedItems.map((t) => t.key),
+                });
                 setInputFileName("");
                 setInputFileDir("");
                 setInputFileAbs("");
-                setInputFileTags([]);
+                setCheckedItems([]);
               }}
             >
               続けて登録

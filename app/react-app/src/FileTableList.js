@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import db from "./firebase";
+import DefineTags from "./DefineTags";
 import { collection, getDocs, onSnapshot, addDoc, updateDoc, doc, deleteDoc, query, where } from "firebase/firestore";
 import {
   Box,
@@ -32,6 +33,13 @@ import {
   Text,
   Spacer,
   Stack,
+  Popover,
+  PopoverTrigger,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverContent,
 } from "@chakra-ui/react";
 
 function FileTableList() {
@@ -259,11 +267,17 @@ export default FileTableList;
 
 function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isTagPopupOpen, onTagPopupOpen, onTagPopupClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [inputFileName, setInputFileName] = useState(fileName);
   const [inputFileDir, setInputFileDir] = useState(fileDir);
   const [inputFileAbs, setInputFileAbs] = useState(fileAbs);
   const [inputFileTagIds, setInputFileTagIds] = useState(fileTagIds);
+  const [isTagPopClose, setIsTagPopClose] = useState(true);
+
+  const HandleDelete = (tag) => {
+    setInputFileTagIds(inputFileTagIds.filter((t) => t.key !== tag.key));
+  };
 
   return (
     <>
@@ -343,21 +357,34 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
               <HStack>
                 {/* 枠線をつけて、タグを表示する 枠線の色はinputと同じ、やや太い枠*/}
                 <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
-                  {fileTagIds.map((tagId) => (
-                    <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId + "popup"}>
-                      {tags
-                        .filter((tag) => tag.key === tagId)
-                        .map((tag) => {
-                          return <TagLabel key={tag.key + "popup_index"}>{tag.name}</TagLabel>;
-                        })}
-                      <TagCloseButton />
+                  {inputFileTagIds.map((tag) => (
+                    <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                      <TagLabel>{tag.name}</TagLabel>
+                      <TagCloseButton
+                        onClick={() => {
+                          HandleDelete(tag);
+                        }}
+                      />
                     </Tag>
                   ))}
                 </HStack>
                 {/* タグの編集ボタン */}
-                <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue">
-                  タグ編集
-                </Button>
+
+                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagPopupOpen} onClose={onTagPopupClose}>
+                  <PopoverTrigger>
+                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" isDisabled={isInputDisabled}>
+                      タグ編集
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverHeader>タグを選択</PopoverHeader>
+                    <PopoverBody>
+                      <DefineTags checkedItems={inputFileTagIds} setCheckedItems={setInputFileTagIds} />
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
               </HStack>
             </Box>
           </ModalBody>
@@ -382,13 +409,14 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
               <Button
                 mr={3}
                 onClick={() => {
+                  // onTagPopupClose();
                   setIsInputDisabled(!isInputDisabled);
                   updateData({
                     fileId: fileId,
                     name: inputFileName,
                     dir: inputFileDir,
                     abs: inputFileAbs,
-                    tagIds: inputFileTagIds,
+                    tagIds: inputFileTagIds.map((tag) => tag.key),
                   });
                 }}
               >
