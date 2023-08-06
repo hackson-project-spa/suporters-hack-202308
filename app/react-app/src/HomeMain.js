@@ -63,7 +63,10 @@ function HomeMain() {
               Tagifyは、ファイルやコンテンツの整理と検索を簡単にするための便利なツールです。
             </Text>
             <Text fontSize="xl" fontWeight="bold">
-              ユーザーはファイルにタグを付けることで、関連するコンテンツを簡単に分類し、タグを使った効率的な検索を行うことができます。タグはユーザーが自由に設定でき、カテゴリーやキーワードに応じてタグを付与することが可能です。
+              ユーザーはファイルにタグを付けることで、関連するコンテンツを簡単に分類し、タグを使った効率的な検索を行うことができます。
+            </Text>
+            <Text fontSize="xl" fontWeight="bold">
+              タグはユーザーが自由に設定でき、カテゴリーやキーワードに応じてタグを付与することが可能です。
             </Text>
           </Stack>
         </Center>
@@ -71,9 +74,9 @@ function HomeMain() {
       <Box p="5vh">
         <Center>
           <SimpleGrid spacing={4} templeateColumns="repeat(auto-fill, minmax(200px, 1fr))">
-            <HStack spacing={"50px"}>
+            <HStack spacing={"5vw"}>
               {buttonName.map((button) => (
-                <Card key={button.name} maxW="sm" borderRadius="lg" overflow="hidden" w={"20vh"}>
+                <Card key={button.name} maxW="sm" borderRadius="lg" overflow="hidden" w={"20vw"}>
                   {/* <CardHeader>
                     <Heading size="md"> {button.name}</Heading>
                   </CardHeader> */}
@@ -82,7 +85,7 @@ function HomeMain() {
                       {button.name}
                     </Heading>
                     {/* 各画像の大きさが統一されるようにする */}
-                    <Image src={button.img} borderRadius="lg" boxSize="15vh" />
+                    <Image src={button.img} borderRadius="lg" boxSize="15vw" />
                     <Text mt="3">{button.explain}</Text>
                   </CardBody>
                   <CardFooter>
