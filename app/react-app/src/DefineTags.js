@@ -70,9 +70,7 @@ function DefineTags({ checkedItems, setCheckedItems }) {
               mb={4}
               onClick={() => {
                 setTags(
-                  eternal.filter(
-                    (tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key)
-                  )
+                  eternal.filter((tab) => tab.name.includes(inputSearchTag) && checkedItems.every((t) => t.key !== tab.key))
                 );
               }}
             >
@@ -106,7 +104,7 @@ function DefineTags({ checkedItems, setCheckedItems }) {
           </Tbody>
         </Table>
       </Box>
-      <Text>選択内容：{checkedItems.map((tag) => tag.name)}</Text>
+      {/* <Text>選択内容：{checkedItems.map((tag) => tag.name)}</Text> */}
     </Box>
   );
 }

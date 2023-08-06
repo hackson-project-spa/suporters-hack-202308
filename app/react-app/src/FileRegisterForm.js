@@ -29,7 +29,7 @@ function FileRegisterForm() {
 
   return (
     <VStack>
-      <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
+      <Box w="50vw" border="1px solid #CBD5E0" p={4} mt={4}>
         <FormControl>
           <FormLabel mt={1} htmlFor="name">
             ファイル名
@@ -89,7 +89,7 @@ function FileRegisterForm() {
             </HStack>
             <Popover placement="bottom" closeOnBlur={false}>
               <PopoverTrigger>
-                <Button size="lg" mb={4}>
+                <Button size="lg" borderRadius="full" variant="solid" colorScheme="blue">
                   選択
                 </Button>
               </PopoverTrigger>
@@ -107,6 +107,7 @@ function FileRegisterForm() {
         <Center p={4}>
           <HStack spacing={4}>
             <Button
+              colorScheme="red"
               size="lg"
               mb={4}
               onClick={() => {
@@ -135,6 +136,7 @@ function FileRegisterForm() {
               </Button>
             </LinkRouter>
             <Button
+              colorScheme="green"
               size="lg"
               mb={4}
               onClick={() => {

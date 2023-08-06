@@ -51,7 +51,8 @@ function FileTableList() {
   const [indexFileName, setIndexFileName] = useState("");
   const [indexFileDir, setIndexFileDir] = useState("");
   const [indexFileAbs, setIndexFileAbs] = useState("");
-  const [indexFileTagIds, setIndexFileTagIds] = useState(testArray);
+  const [indexFileTagIds, setIndexFileTagIds] = useState([]);
+  const [searchTags, setSearchTags] = useState(false);
 
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
@@ -97,7 +98,7 @@ function FileTableList() {
               file.name.includes(indexFileName) &&
               file.dir.includes(indexFileDir) &&
               file.abs.includes(indexFileAbs) &&
-              indexFileTagIds.every((tagId) => file.tagIds.includes(tagId))
+              indexFileTagIds.every((tagId) => file.tagIds.includes(tagId.key))
             );
           })
       );
@@ -119,18 +120,22 @@ function FileTableList() {
         検索ボタンは一つで、or検索かand検索かを選べる*/}
         <HStack mb={3}>
           <HStack mr={5}>
-            <FormLabel mt={1} htmlFor="name" w="6vw" mb={4}>
+            <FormLabel mt={1} htmlFor="name" w="7vw" mb={4}>
               ファイル名称
             </FormLabel>
             <Input
               id="city"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={4}
               value={indexFileName}
               onChange={(e) => {
                 setIndexFileName(e.target.value);
+              }}
+              onClick={() => {
+                setSearchTags(false);
               }}
             />
           </HStack>
@@ -142,11 +147,15 @@ function FileTableList() {
               id="tel"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={4}
               value={indexFileDir}
               onChange={(e) => {
                 setIndexFileDir(e.target.value);
+              }}
+              onClick={() => {
+                setSearchTags(false);
               }}
             />
           </HStack>
@@ -154,18 +163,22 @@ function FileTableList() {
         {/* タグはリストから複数選択させる */}
         <HStack mb={3}>
           <HStack mr={5}>
-            <FormLabel mt={1} htmlFor="name" w="6vw" mb={2}>
+            <FormLabel mt={1} htmlFor="name" w="7vw" mb={2}>
               概要
             </FormLabel>
             <Input
               id="name"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={2}
               value={indexFileAbs}
               onChange={(e) => {
                 setIndexFileAbs(e.target.value);
+              }}
+              onClick={() => {
+                setSearchTags(false);
               }}
             />
           </HStack>
@@ -173,12 +186,66 @@ function FileTableList() {
             <FormLabel mt={1} htmlFor="name" w="3vw" mb={2}>
               タグ
             </FormLabel>
+            <HStack>
+              <HStack p={1} width={"21vw"} border="1px solid #CBD5E0" borderRadius="md" mb={2} height={"4vh"}>
+                {indexFileTagIds.map((tag) => (
+                  <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
+                    <TagLabel>{tag.name}</TagLabel>
+                    <TagCloseButton
+                      onClick={() => {
+                        setIndexFileTagIds(indexFileTagIds.filter((t) => t.key !== tag.key));
+                      }}
+                    />
+                  </Tag>
+                ))}
+              </HStack>
+            </HStack>
+            {/* タグの編集ボタン */}
+
+            <Popover placement="bottom" closeOnBlur={false} isOpen={searchTags}>
+              <PopoverTrigger>
+                <Button
+                  mb={2}
+                  size="sm"
+                  borderRadius="full"
+                  variant="solid"
+                  colorScheme="blue"
+                  onClick={() => {
+                    setSearchTags(!searchTags);
+                  }}
+                >
+                  タグ検索
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton
+                  onClick={() => {
+                    setSearchTags(false);
+                  }}
+                />
+                <PopoverHeader>タグを選択</PopoverHeader>
+                <PopoverBody>
+                  <DefineTags checkedItems={indexFileTagIds} setCheckedItems={setIndexFileTagIds} />
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </HStack>
         </HStack>
         {/* 検索ボタン */}
         <VStack direction="row" spacing={4} align="center">
           <HStack>
-            <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" mb={3} onClick={indexFunc}>
+            <Button
+              size="sm"
+              borderRadius="full"
+              variant="solid"
+              colorScheme="blue"
+              mb={3}
+              onClick={() => {
+                indexFunc();
+                setSearchTags(false);
+              }}
+            >
               検索
             </Button>
             <Button
@@ -188,6 +255,7 @@ function FileTableList() {
               colorScheme="red"
               mb={3}
               onClick={() => {
+                setSearchTags(false);
                 setIndexFileName("");
                 setIndexFileDir("");
                 setIndexFileAbs("");
@@ -236,7 +304,7 @@ function FileTableList() {
                     {file.tagIds.map((tagId) => (
                       <Tag size="sm" borderRadius="full" variant="solid" colorScheme="green" key={tagId.key + file.id}>
                         <TagLabel key={tagId.key + file.id + "tag"}>{tagId.name}</TagLabel>
-                        <TagCloseButton />
+                        {/* <TagCloseButton /> */}
                       </Tag>
                     ))}
                   </HStack>
@@ -280,13 +348,14 @@ export default FileTableList;
 
 function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isTagPopupOpen, onTagPopupOpen, onTagPopupClose } = useDisclosure();
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [inputFileName, setInputFileName] = useState(fileName);
   const [inputFileDir, setInputFileDir] = useState(fileDir);
   const [inputFileAbs, setInputFileAbs] = useState(fileAbs);
   const [inputFileTagIds, setInputFileTagIds] = useState(fileTagIds);
-  const [isTagPopClose, setIsTagPopClose] = useState(true);
+  const [isTagPopClose, setIsTagPopClose] = useState(false);
+  const [isTagEdit, setIsTagEdit] = useState(false);
+  const tagIdsInitial = fileTagIds;
 
   const HandleDelete = (tag) => {
     setInputFileTagIds(inputFileTagIds.filter((t) => t.key !== tag.key));
@@ -302,7 +371,10 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          setIsInputDisabled(true);
+          if (!isInputDisabled) {
+            setInputFileTagIds(tagIdsInitial);
+            setIsInputDisabled(true);
+          }
         }}
         size="4xl"
       >
@@ -386,15 +458,28 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
                 </HStack>
                 {/* タグの編集ボタン */}
 
-                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagPopupOpen} onClose={onTagPopupClose}>
+                <Popover placement="bottom" closeOnBlur={false} isOpen={isTagEdit && isTagPopClose}>
                   <PopoverTrigger>
-                    <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" isDisabled={isInputDisabled}>
+                    <Button
+                      size="sm"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="blue"
+                      isDisabled={isInputDisabled}
+                      onClick={() => {
+                        setIsTagEdit(!isTagEdit);
+                      }}
+                    >
                       タグ編集
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent>
                     <PopoverArrow />
-                    <PopoverCloseButton />
+                    <PopoverCloseButton
+                      onClick={() => {
+                        setIsTagEdit(!isTagEdit);
+                      }}
+                    />
                     <PopoverHeader>タグを選択</PopoverHeader>
                     <PopoverBody>
                       <DefineTags checkedItems={inputFileTagIds} setCheckedItems={setInputFileTagIds} />
@@ -412,21 +497,29 @@ function PopupFileDetail({ fileId, fileName, fileDir, fileAbs, fileTagIds, tags 
               onClick={() => {
                 onClose();
                 setIsInputDisabled(true);
+                setIsTagEdit(false);
               }}
             >
               Close
             </Button>
 
             {isInputDisabled ? (
-              <Button mr={3} onClick={() => setIsInputDisabled(!isInputDisabled)}>
+              <Button
+                mr={3}
+                onClick={() => {
+                  setIsInputDisabled(!isInputDisabled);
+                  setIsTagPopClose(true);
+                }}
+              >
                 編集
               </Button>
             ) : (
               <Button
                 mr={3}
                 onClick={() => {
-                  // onTagPopupClose();
                   setIsInputDisabled(!isInputDisabled);
+                  setIsTagPopClose(false);
+                  setIsTagEdit(false);
                   updateData({
                     fileId: fileId,
                     name: inputFileName,
