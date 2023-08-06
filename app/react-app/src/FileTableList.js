@@ -120,14 +120,15 @@ function FileTableList() {
         検索ボタンは一つで、or検索かand検索かを選べる*/}
         <HStack mb={3}>
           <HStack mr={5}>
-            <FormLabel mt={1} htmlFor="name" w="6vw" mb={4}>
+            <FormLabel mt={1} htmlFor="name" w="7vw" mb={4}>
               ファイル名称
             </FormLabel>
             <Input
               id="city"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={4}
               value={indexFileName}
               onChange={(e) => {
@@ -146,7 +147,8 @@ function FileTableList() {
               id="tel"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={4}
               value={indexFileDir}
               onChange={(e) => {
@@ -161,14 +163,15 @@ function FileTableList() {
         {/* タグはリストから複数選択させる */}
         <HStack mb={3}>
           <HStack mr={5}>
-            <FormLabel mt={1} htmlFor="name" w="6vw" mb={2}>
+            <FormLabel mt={1} htmlFor="name" w="7vw" mb={2}>
               概要
             </FormLabel>
             <Input
               id="name"
               w="21vw"
               placeholder="Basic usage"
-              size="md"
+              // size="md"
+              h="4vh"
               mb={2}
               value={indexFileAbs}
               onChange={(e) => {
@@ -184,7 +187,7 @@ function FileTableList() {
               タグ
             </FormLabel>
             <HStack>
-              <HStack width={"21vw"} border="1px solid #CBD5E0" borderRadius="md" mb={2} height={"4vw"}>
+              <HStack p={1} width={"21vw"} border="1px solid #CBD5E0" borderRadius="md" mb={2} height={"4vh"}>
                 {indexFileTagIds.map((tag) => (
                   <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
                     <TagLabel>{tag.name}</TagLabel>
