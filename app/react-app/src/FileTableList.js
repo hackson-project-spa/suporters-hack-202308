@@ -184,7 +184,7 @@ function FileTableList() {
               タグ
             </FormLabel>
             <HStack>
-              <HStack width={"35vw"} border="1px solid #CBD5E0" borderRadius="md" p={3}>
+              <HStack width={"21vw"} border="1px solid #CBD5E0" borderRadius="md" mb={2} height={"4vw"}>
                 {indexFileTagIds.map((tag) => (
                   <Tag key={tag.key} size="sm" borderRadius="full" variant="solid" colorScheme="green">
                     <TagLabel>{tag.name}</TagLabel>
@@ -202,6 +202,7 @@ function FileTableList() {
             <Popover placement="bottom" closeOnBlur={false} isOpen={searchTags}>
               <PopoverTrigger>
                 <Button
+                  mb={2}
                   size="sm"
                   borderRadius="full"
                   variant="solid"
