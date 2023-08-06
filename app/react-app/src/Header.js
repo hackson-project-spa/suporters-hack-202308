@@ -1,7 +1,7 @@
 import React from "react";
-import { Tab, Tabs, TabList, Text, HStack } from "@chakra-ui/react";
+import { Tab, Tabs, TabList, Text, HStack, Image } from "@chakra-ui/react";
 import { Link as LinkRouter } from "react-router-dom";
-
+import Logo from "./logo-no-back.png";
 function Header(index) {
   const tabList = [
     {
@@ -21,13 +21,11 @@ function Header(index) {
     },
   ];
   return (
-    <Tabs colorScheme="red" index={index.index} defaultIndex={-1} backgroundColor={"#edf6fa"}>
+    <Tabs colorScheme="red" index={index.index} defaultIndex={-1} backgroundColor={"#CBD5E0"}>
       <TabList>
         <HStack>
           <LinkRouter to="/">
-            <Text rm="20px" p={"4"} mr={6}>
-              logo
-            </Text>
+            <Image src={Logo} objectFit="cover" boxSize="50px" />
           </LinkRouter>
           {tabList.map((tab) => (
             <LinkRouter to={tab.path} key={tab.id}>

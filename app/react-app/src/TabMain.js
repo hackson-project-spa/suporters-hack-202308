@@ -40,7 +40,7 @@ function TabMain() {
 
   return (
     <VStack>
-      <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
+      <Box w="50vw" border="1px solid #CBD5E0" p={4} mt={4}>
         <Box>
           <FormLabel mt={1} htmlFor="name">
             タグ名称検索
@@ -58,9 +58,11 @@ function TabMain() {
               }}
             />
             <Button
-              size="lg"
-              w="8vw"
-              mb={4}
+              size="sm"
+              borderRadius="full"
+              variant="solid"
+              colorScheme="blue"
+              mb={3}
               onClick={() => {
                 const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
 
@@ -71,7 +73,6 @@ function TabMain() {
                       .filter((tab) => tab.name.includes(inputSearchTag))
                   );
                 });
-
               }}
             >
               検索
@@ -86,7 +87,7 @@ function TabMain() {
                   {tab.name}
                 </Text>
                 <PopoverForm tagId={tab.key} tagName={tab.name} />
-                <Button size="sm" onClick={() => deleteData({ tagId: tab.key })}>
+                <Button colorScheme="red" size="sm" onClick={() => deleteData({ tagId: tab.key })}>
                   削除
                 </Button>
               </HStack>
@@ -95,7 +96,7 @@ function TabMain() {
         </Box>
       </Box>
 
-      <Box w="50vw" border="1px solid #00ffff" p={4} mt={4}>
+      <Box w="50vw" border="1px solid #CBD5E0" p={4} mt={4}>
         <FormLabel htmlFor="name">タグ名称新規登録</FormLabel>
         <HStack>
           <Input
@@ -108,6 +109,7 @@ function TabMain() {
             onChange={(e) => setNewTag(e.target.value)}
           />
           <Button
+            colorScheme="green"
             size="lg"
             mb={4}
             onClick={() => {
