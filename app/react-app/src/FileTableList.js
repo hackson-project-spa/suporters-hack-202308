@@ -52,6 +52,7 @@ function FileTableList() {
   const [indexFileDir, setIndexFileDir] = useState("");
   const [indexFileAbs, setIndexFileAbs] = useState("");
   const [indexFileTagIds, setIndexFileTagIds] = useState([]);
+  const [searchTags, setSearchTags] = useState(false);
 
   useEffect(() => {
     const firebaseData = query(collection(db, "tags"), where("name", "!=", ""));
@@ -132,6 +133,9 @@ function FileTableList() {
               onChange={(e) => {
                 setIndexFileName(e.target.value);
               }}
+              onClick={() => {
+                setSearchTags(false);
+              }}
             />
           </HStack>
           <HStack>
@@ -147,6 +151,9 @@ function FileTableList() {
               value={indexFileDir}
               onChange={(e) => {
                 setIndexFileDir(e.target.value);
+              }}
+              onClick={() => {
+                setSearchTags(false);
               }}
             />
           </HStack>
@@ -166,6 +173,9 @@ function FileTableList() {
               value={indexFileAbs}
               onChange={(e) => {
                 setIndexFileAbs(e.target.value);
+              }}
+              onClick={() => {
+                setSearchTags(false);
               }}
             />
           </HStack>
@@ -189,15 +199,27 @@ function FileTableList() {
             </HStack>
             {/* タグの編集ボタン */}
 
-            <Popover placement="bottom" closeOnBlur={false}>
+            <Popover placement="bottom" closeOnBlur={false} isOpen={searchTags}>
               <PopoverTrigger>
-                <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue">
+                <Button
+                  size="sm"
+                  borderRadius="full"
+                  variant="solid"
+                  colorScheme="blue"
+                  onClick={() => {
+                    setSearchTags(!searchTags);
+                  }}
+                >
                   タグ検索
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
                 <PopoverArrow />
-                <PopoverCloseButton />
+                <PopoverCloseButton
+                  onClick={() => {
+                    setSearchTags(false);
+                  }}
+                />
                 <PopoverHeader>タグを選択</PopoverHeader>
                 <PopoverBody>
                   <DefineTags checkedItems={indexFileTagIds} setCheckedItems={setIndexFileTagIds} />
@@ -209,7 +231,17 @@ function FileTableList() {
         {/* 検索ボタン */}
         <VStack direction="row" spacing={4} align="center">
           <HStack>
-            <Button size="sm" borderRadius="full" variant="solid" colorScheme="blue" mb={3} onClick={indexFunc}>
+            <Button
+              size="sm"
+              borderRadius="full"
+              variant="solid"
+              colorScheme="blue"
+              mb={3}
+              onClick={() => {
+                indexFunc();
+                setSearchTags(false);
+              }}
+            >
               検索
             </Button>
             <Button
@@ -219,6 +251,7 @@ function FileTableList() {
               colorScheme="red"
               mb={3}
               onClick={() => {
+                setSearchTags(false);
                 setIndexFileName("");
                 setIndexFileDir("");
                 setIndexFileAbs("");
